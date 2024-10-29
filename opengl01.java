@@ -2,13 +2,17 @@ package opengl01;
 
 
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 // υποενότητα ΝΕWT είναι ένα ελαφρύ API για την δημιουργία παραθύρων
 //
 import com.jogamp.opengl.GLCapabilities;
 /*Η GLCapabilities ένα αντικείμενο το οποίο περιγράφει τις ρυθμίσεις της γραφικής επιφάνειας 
  * (rendering surface),
  * όπως αν θα υπάρχει υποστήριξη για βάθος, ανάλυση χρώματος*/
-
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 /*
  * Η GLProfile είναι μια κλάση της JOGL (Java for OpenGL) 
@@ -29,6 +33,8 @@ public class opengl01 {
 	
 	
 	public static void init() {
+		
+		
 		GLProfile.initSingleton();
 		/*Αρχικοποίηση του GLProfile: Αυτή η μέθοδος είναι υπεύθυνη για την 
 		αρχικοποίηση των εσωτερικών δομών που απαιτούνται 
@@ -51,13 +57,20 @@ public class opengl01 {
 		
 		window  = GLWindow.create(caps);
 		window.setSize(640,360);
+
 		window.setResizable(false);
 		window.setVisible(true);
 		window.setTitle("My OpenGL Window");
+		window.addGLEventListener(new BackgroundColorListener());
+	   // Δημιουργία και εκκίνηση του animator
+        animator = new Animator(window);
+        animator.start();
+    }
+	
 		
-		
+	
 			
-	}
+	
 	public static void main(String[] args) {
 		
 		init();
@@ -70,4 +83,47 @@ public class opengl01 {
         animator.stop();
 
 	}
+}
+//Δημιουργία κλάσης για τον καθορισμό του background χρώματος
+class BackgroundColorListener implements GLEventListener {
+ @Override
+ public void init(GLAutoDrawable drawable) {   // Για αρχικοποίηση γραφικων παραστάσεων
+	                                          /*Η μέθοδος init χρησιμοποιείται συνήθως για να ρυθμίσεις το περιβάλλον 
+	                                           * γραφικών και να εκτελέσεις οποιαδήποτε αρχικοποίηση απαιτείται για την εφαρμογή. 
+	                                           * Αυτό περιλαμβάνει τη ρύθμιση των χρωμάτων, της προοπτικής, και άλλων παραμέτρων του OpenGL.
+	                                           */
+     
+     
+                                               
+ }
+
+ @Override
+ public void display(GLAutoDrawable drawable) {
+     GL2 gl = drawable.getGL().getGL2();      // Με το αντικείμενο GL2, μπορείς να καλέσεις πολλές μεθόδους για να διαχειριστείς τις
+                                              // γραφικές παραστάσεις. Ορισμένες συνηθισμένες λειτουργίες περιλαμβάνουν:
+     
+     // Ορισμός του background χρώματος σε μπλε
+     gl.glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Μπλε χρώμα (RGB)
+     // Καθαρισμός του παραθύρου με το μπλε background χρώμα
+     gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+    // gl.glBegin(GL.GL_TRIANGLES); // Ένα απλό τρίγωνο
+    // gl.glColor3f(1.0f, 0.0f, 0.0f); // Κόκκινο χρώμα
+    // gl.glVertex3f(0.0f, 1.0f, 0.0f);
+   //  gl.glVertex3f(-1.0f, -1.0f, 0.0f);
+    // gl.glVertex3f(1.0f, -1.0f, 0.0f);
+   //  gl.glEnd();
+    // gl.glFlush(); // Εμφάνιση γραφικών
+    
+ }
+
+ @Override
+ public void dispose(GLAutoDrawable drawable) {
+     // Δεν απαιτείται κάποια ενέργεια εδώ καθορισμός πόρων
+ }
+
+ @Override
+ public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+     GL2 gl = drawable.getGL().getGL2();
+     gl.glViewport(0, 0, width, height);
+ }
 }
